@@ -17,3 +17,19 @@ class HomePageTest(TestCase):
         response = home_page(request)
         expected_html = render_to_string('lists/home.html')
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_can_save_a_POST_request(self):
+        request = HttpRequest()
+        request.method = "POST"
+        request.POST['item_text'] = '신규 작업 아이템'
+
+        response = home_page(request)
+        response_content = response.content.decode()
+        self.assertIn('신규 작업 아이템', response_content)
+        expected_html = render_to_string(
+            'lists/home.html',
+            request=request
+        )
+        print(expected_html)
+        # csrf token으로 인한 불일치..
+        # self.assertEqual(response_content.tr, expected_html)
