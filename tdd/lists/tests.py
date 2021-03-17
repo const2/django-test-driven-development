@@ -64,3 +64,14 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
+
+    def test_home_page_display_all_list_items(self):
+        Item.objects.create(text='item 1')
+        Item.objects.create(text='item 2')
+
+        request = HttpRequest()
+        response = home_page(request)
+        response_content = response.content.decode()
+
+        self.assertIn('item 1', response_content)
+        self.assertIn('item 2', response_content)
